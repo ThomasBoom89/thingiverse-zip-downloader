@@ -74,7 +74,7 @@ class HtmlParser
             throw new ModelNameNotFound();
         }
 
-        return str_replace(' ', '_', $model->item(0)->nodeValue);
+        return preg_replace('/[^A-Za-z0-9_\-]/', '_', $model->item(0)->nodeValue);
     }
 
     /**
@@ -88,6 +88,6 @@ class HtmlParser
             throw new FileNameNotFound();
         }
 
-        return str_replace(' ', '_', $name->item(0)->nodeValue);
+        return preg_replace('/[^A-Za-z0-9_\-]/', '_', $name->item(0)->nodeValue);
     }
 }
