@@ -2,6 +2,7 @@
 
 ![PHP](https://img.shields.io/badge/php-%3E%3D7.4-%238892BF?style=plastic&logo=php)
 ![License](https://img.shields.io/badge/license-GPL3-green?style=plastic)
+![docker-github-actions](https://github.com/ThomasBoom89/thingiverse-zip-downloader/actions/workflows/docker-publish.yml/badge.svg?event=push)
 
 A scraper to bundle a zip archive with all stl files of one model found on [Thingiverse](https://www.thingiverse.com/).
 \
