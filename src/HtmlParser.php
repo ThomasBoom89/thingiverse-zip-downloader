@@ -88,6 +88,6 @@ class HtmlParser
             throw new FileNameNotFound();
         }
 
-        return preg_replace('/[^A-Za-z0-9._\-]/', '_', $name->item(0)->nodeValue);
+        return preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $name->item(0)->nodeValue);
     }
 }
