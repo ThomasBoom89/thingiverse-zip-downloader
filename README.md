@@ -23,13 +23,12 @@ git clone url
 cd thingiverse-zip-downloader
 ```
 
-### Option a: run with docker (recommended)
+### Option a: run with docker-compose (recommended)
 
-Build the docker image and start the container (maybe change port mapping to unallocated port)
+Start the container (maybe change port mapping to unallocated port)
 
 ```zsh
-docker build -t thingiverse-zip-downloader .
-docker run -d -p 80:80/tcp thingiverse-zip-downloader -d
+docker-compose up -d
 ```
 
 ### Option b: run with PHP directly on pc

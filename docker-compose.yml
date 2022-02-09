@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  app:
+    image: ghcr.io/thomasboom89/thingiverse-zip-downloader:main
+    container_name: thingiverse-zip-downloader
+    restart: always
+    ports:
+      - "80:80"
