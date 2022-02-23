@@ -14,12 +14,14 @@ and now I like to share it with maker/creator/programmer and many more :)
 
 Working poc (proof of concept), works for private personal use.
 
+![Overview](docs/overview.png)
+
 ## Installation
 
 First clone the repo to your local environment and enter the directory
 
 ```zsh
-git clone url
+git clone https://github.com/ThomasBoom89/thingiverse-zip-downloader
 cd thingiverse-zip-downloader
 ```
 
@@ -33,11 +35,11 @@ docker-compose up -d
 
 ### Option b: run with PHP directly on pc
 
-You also can use PHP built in webserver. You will need the following php extension: _dom, sockets, zip_. Composer must
-be installed on your system and also the chromium browser as well. Currently, the name of the executable used is
-chromium-browser, if the name of the chromium executable differs from this, you have to change it in the source code. In
-src/Scraper.php on line 30 you can change it to the path where the application can find it. Then you have to do an
-install of the composer dependencies:
+You also can use PHP built in webserver. You will need the following php extension: _dom, sockets, zip, json, curl_.
+Composer must be installed on your system and also the chromium browser as well. Currently, the name of the executable
+used is chromium-browser, if the name of the chromium executable differs from this, you have to change it in the source
+code. In src/Scraper.php on line 30 you can change it to the path where the application can find it. Then you have to do
+an install of the composer dependencies:
 
 ```zsh
 composer install -o
@@ -58,7 +60,37 @@ Paste the full url like _https://www.thingiverse.com/thing:316595_ or just the m
 press the download icon. After a certain time you will be offered a file download including all files in one zip
 archive.
 
-![Overview](docs/overview.png)
+## Update
+
+### For option a (docker-compose):
+
+Enter the root directory of the cloned repo and update the repo.
+
+```zsh
+git pull
+```
+
+After this you have to pull the new image from the registry
+
+```zsh
+docker-compose pull
+```
+
+And finally restart your running container.
+
+```zsh
+docker-compose down && docker-compose up -d
+```
+
+### For option b (php internal server)
+
+Check the if your setup has all requirements mentioned in the installation step. Stop the running webserver with Ctrl+C
+or kill the process if started in background. Update the repo and start the webserver.
+
+```zsh
+git pull
+php -S localhost:80
+```
 
 ## License
 
