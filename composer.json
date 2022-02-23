@@ -6,8 +6,10 @@
         }
     },
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.0",
+        "ext-curl": "*",
         "ext-dom": "*",
+        "ext-json": "*",
         "ext-sockets": "*",
         "ext-zip": "*",
         "chrome-php/chrome": "*"
