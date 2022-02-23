@@ -11,32 +11,40 @@
 
 declare(strict_types=1);
 
-namespace ThomasBoom89\ThingiverseZipDownloader;
+namespace ThomasBoom89\ThingiverseZipDownloader\Scraper\Strategy\Browser;
 
 use DOMDocument;
 use DOMNode;
 use DOMXPath;
-use Exception;
+use ThomasBoom89\ThingiverseZipDownloader\Dto\Builder\DownloadLink as DownloadLinkBuilder;
 use ThomasBoom89\ThingiverseZipDownloader\Dto\DownloadLink;
 use ThomasBoom89\ThingiverseZipDownloader\Exception\FileNameNotFound;
+use ThomasBoom89\ThingiverseZipDownloader\Exception\HrefNotFound;
 use ThomasBoom89\ThingiverseZipDownloader\Exception\ModelNameNotFound;
 
 class HtmlParser
 {
+    private DownloadLinkBuilder $downloadLinkBuilder;
+
+    public function __construct()
+    {
+        $this->downloadLinkBuilder = new DownloadLinkBuilder();
+    }
+
     /**
      * @param DOMDocument $domDocument
      * @return DownloadLink[]
      * @throws FileNameNotFound
+     * @throws HrefNotFound
      */
     public function getDownloadLinksByHtml(DOMDocument $domDocument): array
     {
-        $res       = [];
-        $xpath     = new DomXPath($domDocument);
-        $thingRows = $xpath->query("//div[starts-with(@class, 'ThingFile__fileRow')]");
+        $downloadLinks = [];
+        $xpath         = new DomXPath($domDocument);
+        $thingRows     = $xpath->query("//div[starts-with(@class, 'ThingFile__fileRow')]");
 
         foreach ($thingRows as $thingRow) {
-            $downloadLink = new DownloadLink();
-            $linkList     = $xpath->query(".//a[starts-with(@class, 'ThingFile')]", $thingRow);
+            $linkList = $xpath->query(".//a[starts-with(@class, 'ThingFile')]", $thingRow);
             if ($linkList === false) {
 
                 continue;
@@ -45,19 +53,23 @@ class HtmlParser
             if (!isset($link) || !$link->hasAttributes()) {
                 continue;
             }
-
+            $downloadUri = '';
             /**@var DOMNode $attribute */
             foreach ($link->attributes as $attribute) {
                 if ($attribute->nodeName !== 'href') {
-                    continue;
+                    throw new HrefNotFound();
                 }
-                $downloadLink->downloadUri = str_replace(' ', '_', $attribute->nodeValue);
+                $downloadUri = str_replace(' ', '_', $attribute->nodeValue);
             }
-            $downloadLink->filename = $this->getNameFromRow($xpath, $thingRow);
-            $res[]                  = $downloadLink;
+            if (!isset($downloadUri)) {
+                continue;
+            }
+            $filename = $this->getNameFromRow($xpath, $thingRow);
+            $this->downloadLinkBuilder->setDownloadLink(['name' => $filename, 'direct_url' => $downloadUri]);
+            $downloadLinks[] = $this->downloadLinkBuilder->build();
         }
 
-        return $res;
+        return $downloadLinks;
     }
 
 

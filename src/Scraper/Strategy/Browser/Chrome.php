@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace ThomasBoom89\ThingiverseZipDownloader;
+namespace ThomasBoom89\ThingiverseZipDownloader\Scraper\Strategy\Browser;
 
 use DOMDocument;
 use Exception;
@@ -19,9 +19,11 @@ use HeadlessChromium\BrowserFactory;
 use HeadlessChromium\Page;
 use ThomasBoom89\ThingiverseZipDownloader\Exception\HtmlEmpty;
 
-class Scraper
+class Chrome
 {
     /**
+     * @param string $url
+     * @return DOMDocument
      * @throws HtmlEmpty
      */
     public function getDomDocumentFromUrl(string $url): DOMDocument
@@ -54,5 +56,4 @@ class Scraper
 
         return $domDocument;
     }
-
 }

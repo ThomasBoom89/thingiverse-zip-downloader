@@ -13,22 +13,31 @@ declare(strict_types=1);
 
 namespace ThomasBoom89\ThingiverseZipDownloader;
 
-use ThomasBoom89\ThingiverseZipDownloader\Dto\DownloadLink;
+use ThomasBoom89\ThingiverseZipDownloader\Dto\ThingiverseModel;
 use ZipArchive;
 
 class Downloader
 {
     /**
-     * @param DownloadLink[] $files
+     * @param ThingiverseModel $thingiverseModel
      * @param string $zipname
      * @return void
      */
-    public function toZipArchive(array $files, string $zipname): void
+    public function toZipArchive(ThingiverseModel $thingiverseModel, string $zipname): void
     {
+        $contextOptions = [
+            'http' => [
+                "method" => 'GET',
+            ]
+        ];
+        if ($thingiverseModel->token !== '') {
+            $contextOptions['http']['header'] = 'Authorization: Bearer ' . $thingiverseModel->token;
+        }
+        $context    = stream_context_create($contextOptions);
         $zipArchive = new ZipArchive;
         $zipArchive->open($zipname, ZipArchive::CREATE);
-        foreach ($files as $file) {
-            $zipArchive->addFromString($file->filename, file_get_contents($file->downloadUri));
+        foreach ($thingiverseModel->downloadLinks as $file) {
+            $zipArchive->addFromString($file->filename, file_get_contents($file->downloadUri, false, $context));
         }
         $zipArchive->close();
     }
